@@ -1,0 +1,142 @@
+{
+  "name": "Horse",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "/get-user",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -20,
+        0
+      ],
+      "id": "2c4ff9b1-ce27-4078-84da-de269a582a2d",
+      "name": "Webhook",
+      "webhookId": "bc3481d1-c13c-4d93-a272-5998ee2c4dac"
+    },
+    {
+      "parameters": {
+        "url": "https://randomuser.me/api/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "2691c7cb-1738-4e19-9d03-bac216d531a8",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"name\": '{{ $json.results[0].name.first }}',\n  \"age\":  {{ $json.results[0].dob.age }},\n  \"phone\": '{{ $json.results[0].phone }}',\n  \"gender\": '{{ $json.results[0].gender }}'\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        0
+      ],
+      "id": "f0d5a9e6-68c1-46c7-9d9a-0a4b2647ddaa",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "60360e56-8101-4077-8df1-cd09ec79aeed",
+              "leftValue": "={{ $json.age }}",
+              "rightValue": 18,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "f4fc8da1-6e45-43dc-a46f-9b6358dfcfdf",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5d403d16-ce25-49d8-a041-b13276824ae6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9d86364f08eeba3a251fe984ddf43e74ece1902de39e9993000bcc3bd6185034"
+  },
+  "id": "18UpGzAtW96kqdHz",
+  "tags": []
+}
